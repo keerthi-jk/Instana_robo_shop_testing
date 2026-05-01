@@ -1,0 +1,28 @@
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+
+# Build Docker image
+- script: |
+    docker build -t robotshop-web ./web
+  displayName: Build Web Service Image
+
+# Install Trivy (stable method)
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+    wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+    echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/trivy.list
+    sudo apt-get update
+    sudo apt-get install -y trivy
+  displayName: Install Trivy
+
+# Run Trivy scan (DO NOT fail yet)
+- script: |
+    trivy image robotshop-web
+  displayName: Run Trivy Scan
