@@ -24,6 +24,7 @@ steps:
 
 # Run Trivy scan (DO NOT fail yet)
 - script: |
-    #trivy image --severity HIGH,CRITICAL --exit-code 1 robotshop-web
-    trivy image roboshop-web
+    
+    # trivy image --severity HIGH,CRITICAL --exit-code 1 robotshop-web
+    trivy image robotshop-web
   displayName: Run Trivy Scan
